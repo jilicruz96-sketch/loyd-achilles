@@ -1,0 +1,33 @@
+name: Deploy to SKALE
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Compile contracts
+        run: npx hardhat compile
+
+      - name: Deploy contract
+        run: npx hardhat run scripts/deploy.js --network skale
+        env:
+          SKALE_RPC_URL: ${{ secrets.SKALE_RPC_URL }}
+          SKALE_CHAIN_ID: ${{ secrets.SKALE_CHAIN_ID }}
+          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
