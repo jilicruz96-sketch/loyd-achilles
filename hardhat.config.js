@@ -5,9 +5,9 @@ module.exports = {
   solidity: "0.8.19",
   networks: {
     skale: {
-      url: "https://mainnet.skalenodes.com/v1/elated-tan-skat",
-      chainId: 2046399126,
-      accounts: [process.env.PRIVATE_KEY] // 👈 add your wallet PK in .env
+      url: process.env.SKALE_RPC_URL,
+      chainId: Number(process.env.SKALE_CHAIN_ID),
+      accounts: [process.env.DEPLOYER_PRIVATE_KEY]
     }
   }
 };
