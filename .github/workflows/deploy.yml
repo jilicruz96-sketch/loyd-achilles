@@ -1,33 +1,31 @@
-name: Deploy to SKALE
+name: Deploy Smart Contract
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
         with:
-          node-version: 18
+          node-version: '14'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install Dependencies
+        run: |
+          npm install
+          npm install --save-dev hardhat
 
-      - name: Compile contracts
-        run: npx hardhat compile
-
-      - name: Deploy contract
-        run: npx hardhat run scripts/deploy.js --network skale
+      - name: Deploy to Mainnet
         env:
-          SKALE_RPC_URL: ${{ secrets.SKALE_RPC_URL }}
-          SKALE_CHAIN_ID: ${{ secrets.SKALE_CHAIN_ID }}
-          DEPLOYER_PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          RPC_URL: ${{ secrets.RPC_URL }}
+        run: |
+          npx hardhat run scripts/deploy.js --network mainnet
